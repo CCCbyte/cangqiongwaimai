@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -86,10 +87,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(LocalDateTime.now());
 
         //设置当前记录创建人id和修改人id
-        //TODO 后期需要改为当前登录用户的id
         //10L Long类型字符
-        employee.setUpdateUser(10L);
-
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        //TODO 这里可能已经存在username,但是还是插入，插入的时候数据库报重名错误才会捕获，此时id已经自增，不会回滚，暂时没做防重查询
+        //所以这里应该先查询数据库中是否存在该username，如果存在则抛出异常，如果不存在则插入
         employeeMapper.insert(employee);
     }
 
