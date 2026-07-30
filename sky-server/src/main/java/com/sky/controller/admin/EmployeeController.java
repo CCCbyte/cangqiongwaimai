@@ -99,4 +99,18 @@ public class EmployeeController {
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }
+
+    /**
+     * 切换员工账号状态，禁用/启用
+     * @param id
+     * @param status
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("切换员工账号状态")
+    public Result startOrStop(@PathVariable Integer status,Long id){
+        log.info("切换员工账号状态：{},{}", status,id);
+        employeeService.startOrStop(status,id);
+        return Result.success();
+    }
 }

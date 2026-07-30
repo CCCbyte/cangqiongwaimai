@@ -100,12 +100,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.insert(employee);
     }
 
-    /*
+    /**
      * 分页查询
      *
-     * @param employeeDTO
+     * @param employeePageQueryDTO
      * @return
-     */
+     **/
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
 //      pageHelper插件只是传当前页码和数据量，其余的查询条件并没有作为参数传过去，把page和size通过localThread存储，所以下面一行代码会接收到page和size
@@ -116,6 +116,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> records = page.getResult();
 
         return new PageResult(total , records);
+    }
+
+    /**
+     * 切换员工账号状态，禁用/启用
+     * @param id
+     * @param status
+     * @return
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+
+        //要动态写入.不是直接把id和status传入，而是通过Employee对象来传入,update方法要能复用
+        Employee employee = Employee.builder()
+                        .id(id)
+                        .status(status)
+                        .build();
+        employeeMapper.update(employee);
+
     }
 
 }
