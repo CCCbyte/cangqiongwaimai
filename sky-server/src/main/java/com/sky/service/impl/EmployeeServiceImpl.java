@@ -1,16 +1,20 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -93,6 +98,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         //TODO 这里可能已经存在username,但是还是插入，插入的时候数据库报重名错误才会捕获，此时id已经自增，不会回滚，暂时没做防重查询
         //所以这里应该先查询数据库中是否存在该username，如果存在则抛出异常，如果不存在则插入
         employeeMapper.insert(employee);
+    }
+
+    /*
+     * 分页查询
+     *
+     * @param employeeDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+//      pageHelper插件只是传当前页码和数据量，其余的查询条件并没有作为参数传过去，把page和size通过localThread存储，所以下面一行代码会接收到page和size
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        Page<Employee> page =  employeeMapper.pageQuery(employeePageQueryDTO);
+        
+        long total = page.getTotal();
+        List<Employee> records = page.getResult();
+
+        return new PageResult(total , records);
     }
 
 }

@@ -63,6 +63,7 @@
                 <version>${druid}</version>
             </dependency>
 
+            <!--mybatis插件 pagehelper 简化分页查询代码          -->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>

@@ -11,8 +11,12 @@ import java.util.List;
  * 封装分页查询结果
  */
 @Data
+//有参构造
 @AllArgsConstructor
+//无参构造
 @NoArgsConstructor
+//部分参数构造
+//@RequiredArgsConstructor
 public class PageResult implements Serializable {
 
     private long total; //总记录数
